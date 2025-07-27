@@ -1,32 +1,39 @@
 package use_case.change_password;
 
-import entity.User;
-import entity.UserFactory;
-
 /**
  * The Change Password Interactor.
  */
 public class ChangePasswordInteractor implements ChangePasswordInputBoundary {
-    private final ChangePasswordUserDataAccessInterface userDataAccessObject;
-    private final ChangePasswordOutputBoundary userPresenter;
-    private final UserFactory userFactory;
 
-    public ChangePasswordInteractor(ChangePasswordUserDataAccessInterface changePasswordDataAccessInterface,
-                                    ChangePasswordOutputBoundary changePasswordOutputBoundary,
-                                    UserFactory userFactory) {
-        this.userDataAccessObject = changePasswordDataAccessInterface;
+    private final ChangePasswordOutputBoundary userPresenter;
+    private final ChangePasswordUserTypeDataAccessInterface userdatagetter;
+
+    public ChangePasswordInteractor(ChangePasswordOutputBoundary changePasswordOutputBoundary,
+                                    ChangePasswordUserTypeDataAccessInterface userdatagetter) {
         this.userPresenter = changePasswordOutputBoundary;
-        this.userFactory = userFactory;
+        this.userdatagetter = userdatagetter;
     }
 
     @Override
-    public void execute(ChangePasswordInputData changePasswordInputData) {
-        final User user = userFactory.create(changePasswordInputData.getUsername(),
-                                             changePasswordInputData.getPassword());
-        userDataAccessObject.changePassword(user);
+    public void execute(ChangePasswordInputData inputData) {
 
-        final ChangePasswordOutputData changePasswordOutputData = new ChangePasswordOutputData(user.getName(),
-                                                                                  false);
-        userPresenter.prepareSuccessView(changePasswordOutputData);
+        boolean verification;
+        String type = userdatagetter.getType(inputData.getUsername());
+
+        switch (type) {
+            default:
+                verification = false;
+                userPresenter.preparePage(new ChangePasswordOutputData(inputData.getUsername(), verification,
+                        null));
+                break;
+            case "SECURITY":
+                verification = true;
+                String securityQuestion = userdatagetter.getSecurityQuestion(inputData.getUsername());
+                userPresenter.preparePage(new ChangePasswordOutputData(inputData.getUsername(), verification,
+                        securityQuestion));
+        }
+
+
     }
+
 }

@@ -1,13 +1,20 @@
 package entity;
 
-public class SecurityUserFactory implements UserFactory {
+/** Produces SecurityUser instances that require a security question / answer. */
+public final class SecurityUserFactory implements UserFactory {
+
     @Override
     public User create(String name, String password) {
-        return null;
+        throw new UnsupportedOperationException(
+                "SecurityUser requires a security question/answer. "
+                        + "Use the 4‑argument create method.");
     }
 
     @Override
-    public User create(String name, String password, String securityQuestion, String securityAnswer) {
-        return new SecurityUser(name, password, securityQuestion, securityAnswer);
+    public User create(String name, String password,
+                       String securityQuestion,
+                       String securityAnswer) {
+        return new SecurityUser(name, password,
+                securityQuestion, securityAnswer);
     }
 }
