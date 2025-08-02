@@ -229,11 +229,16 @@ public class AppBuilder {
         viewHistoryViewModel = new ViewHistoryViewModel();
         final ViewHistoryOutputBoundary viewHistoryPresenter =
                 new ViewHistoryPresenter(viewHistoryViewModel);
-        //TODO modify dataaccessobject
+
         final ViewHistoryInputBoundary viewHistoryInteractor =
                 new ViewHistoryInteractor(userRecordDataAccessObject, viewHistoryPresenter);
+
         final ViewHistoryController viewHistoryController =
                 new ViewHistoryController(viewHistoryInteractor);
+        viewHistoryView = new ViewHistoryView(viewHistoryViewModel);
+
+        loggedInView.addViewHistoryPage(viewHistoryView);
+        loggedInView.setViewHistoryController(viewHistoryController);
         viewHistoryView = new ViewHistoryView(viewHistoryViewModel);
 
         loggedInView.addViewHistoryPage(viewHistoryView);
