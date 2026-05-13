@@ -174,7 +174,7 @@ mvn exec:java -Dexec.mainClass="app.Main"
 
 ## License
 
-Licensed under the **MIT License**. See [LICENSE](LICENSE) for details.
+Licensed under the **MIT License**. See [LICENSE](LICENSE) for details
 
 ---
 
